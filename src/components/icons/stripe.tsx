@@ -1,0 +1,2 @@
+// Stripe icon removed
+export {};

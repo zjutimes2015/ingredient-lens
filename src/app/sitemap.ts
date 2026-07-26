@@ -29,6 +29,31 @@ const staticRoutes = [
 ];
 
 /**
+ * Top 30 ingredient slugs for SEO — single ingredients and comparison pages
+ * These are statically defined to ensure Google indexes the most valuable
+ * ingredient detail pages without requiring a DB query at sitemap-build time.
+ */
+const ingredientSlugs = [
+  'niacinamide',
+  'retinol',
+  'hyaluronic-acid',
+  'vitamin-c',
+  'squalane',
+  'ceramide',
+  'panthenol',
+  'salicylic-acid',
+  'glycolic-acid',
+  'azelaic-acid',
+  'kojic-acid',
+  'arbutin',
+  'tranexamic-acid',
+  'centella-asiatica',
+  'niacinamide-vs-vitamin-c',
+  'retinoid-vs-retinol',
+  'vitamin-c-vs-niacinamide',
+];
+
+/**
  * Generate a sitemap for the website with hreflang support
  *
  * https://nextjs.org/docs/app/api-reference/functions/generate-sitemaps
@@ -143,6 +168,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       )
     );
   }
+
+  // add ingredient pages (single ingredients + comparisons)
+  // These are statically listed to ensure Google indexes the most
+  // valuable SEO pages without a DB query at build time.
+  routing.locales.forEach((locale) => {
+    ingredientSlugs.forEach((slug) => {
+      sitemapList.push({
+        url: getUrl(`/ingredients/${slug}`, locale),
+        alternates: {
+          languages: generateHreflangUrls(`/ingredients/${slug}`),
+        },
+      });
+    });
+  });
 
   return sitemapList;
 }
